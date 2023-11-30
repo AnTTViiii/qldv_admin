@@ -1,0 +1,55 @@
+.summary-box-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+
+    >div {
+        flex: 1;
+    }
+
+    @media screen and (max-width: 1080px) {
+        gap: 20px
+    }
+}
+
+.summary-box {
+    height: auto;
+    max-height: 400px !important;
+    display: grid;
+    grid-template-columns: 70% 1fr;
+
+    .summary-box__chart {
+        width: 100%;
+
+        .summary-box__chart__value {
+            margin-top: -10%;
+            font-weight: 700;
+        }
+    }
+
+    .summary-box__info {
+        width: 65%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-direction: column;
+
+        .summary-box__info__title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.2;
+
+            >span {
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: #DB190C;
+            }
+        }
+
+        .summary-box__info__value {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: black;
+        }
+    }
+}
