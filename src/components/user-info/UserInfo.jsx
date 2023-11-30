@@ -1,15 +1,15 @@
 import React from "react";
-import "./userinfo.css";
+import "./user-info.css";
 import {  PersonRounded } from "@mui/icons-material";
 
 const UserInfo = ({ admin }) => {
   return (
     <div className="user-info">
       <div className="user-info__icon">
-        <PersonRounded />
+        <PersonRounded className="person-icon" />
       </div>
       <div className="user-info__name">
-        <span>{admin.name}</span>
+        <span>Viii</span>
       </div>
     </div>
   );

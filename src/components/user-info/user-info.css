@@ -9,17 +9,21 @@
   width: max-content;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
-  .user-info__img {
+  .user-info__icon {
     --size: 50px;
     width: var(--size);
     height: var(--size);
     border-radius: 30px;
     overflow: hidden;
-    border: 1px solid #4B49AC;
+    border: 2px solid #4B49AC;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
 
-    > div {
-      border-radius: 20px;
-      object-fit: cover;
+    .person-icon {
+      color: #4B49AC;
+      font-size: 35px;
     }
   }
 

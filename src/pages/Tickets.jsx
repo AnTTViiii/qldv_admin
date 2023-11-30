@@ -1,10 +1,9 @@
 import React from 'react'
+import TicketList from "../components/ticket/TicketList"
 
 const Tickets = () => {
   return (
-    <div>
-      
-    </div>
+    <TicketList />
   )
 }
 

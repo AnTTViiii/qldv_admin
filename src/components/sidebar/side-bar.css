@@ -32,7 +32,7 @@
         }
 
         >img {
-            --size: 90px;
+            --size: 150px;
             width: var(--size);
             height: auto;
         }
@@ -73,7 +73,7 @@
             }
 
             &:hover {
-                color: #6734ff;
+                color: #4b49ac;
 
                 @media screen and (max-width: 1080px) {
                     color: #FF9066;
@@ -82,7 +82,7 @@
 
             &.active {
                 font-weight: 700;
-                color: #6734ff;
+                color: #4b49ac;
 
                 @media screen and (max-width: 1080px) {
                     color: #FF9066;
@@ -95,7 +95,7 @@
                     width: 5px;
                     left: 0;
                     top: 0;
-                    background-color: #6734ff;
+                    background-color: #4b49ac;
                     border-top-right-radius: 20px;
                     border-bottom-right-radius: 20px;
 
@@ -139,13 +139,13 @@
     border-radius: 10px !important;
 }
 
-.css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
+/* .css-bdhsul-MuiTypography-root-MuiDialogTitle-root {
 
-}
+} */
 
 .css-1e6y48t-MuiButtonBase-root-MuiButton-root {
     color: white !important;
     text-transform: none !important;
-    background-color: #6734ff !important;
+    background-color: #4b49ac !important;
     margin: auto 10px 10px !important;
 }

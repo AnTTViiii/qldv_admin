@@ -19,6 +19,10 @@
     cursor: pointer;
     display: none;
 
+    @media screen and (max-width: 1080px) {
+        display: flex;
+    }
+
     .icon {
         font-size: 3rem;
         color: #4B49AC;

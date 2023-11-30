@@ -8,9 +8,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Dialog, DialogTitle, Button, DialogActions } from '@mui/material'
 import { Transition } from '../configs/functions'
 
-// const Transition = React.forwardRef(function Transition(props, ref) {
-//     return <Slide direction="up" ref={ref} {...props} />;
-// });
 const SideBar = () => {
     const navigate = useNavigate();
     const [activeIndex, setActiveIndex] = useState(0);
@@ -47,7 +44,7 @@ const SideBar = () => {
     return (
         <div className='sidebar'>
             <div className='sidebar__logo'>
-                <img src='https://res.cloudinary.com/dpwehcnso/image/upload/v1696926058/uitbikes/admin_logo_byc47w.png' alt='UIT Bikes' />
+                <img src='https://res.cloudinary.com/dpwehcnso/image/upload/v1701279575/arcGIS/ddl_logo_p8xfe6.png' alt='QLDV Dinh Doc Lap Logo' />
                 <div className="sidebar-close" onClick={closeSideBar}>
                     <ClearRounded className='icon' />
                 </div>
