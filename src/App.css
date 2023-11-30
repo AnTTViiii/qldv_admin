@@ -54,3 +54,23 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+.box {
+  padding: 20px;
+  border-radius: 20px;
+  background-color: #fff;
+  box-shadow: rgba(149,157,165,0.2) 0px 8px 24px;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.mbc {
+  margin-bottom: 20px;
+}
+
+.mb {
+  margin-bottom: 30px;
+}
