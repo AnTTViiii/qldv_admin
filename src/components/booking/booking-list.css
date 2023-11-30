@@ -1,0 +1,115 @@
+.booking-list {
+    .booking-list-table {
+        >tr {
+            >td {
+                .select-box {
+                    width: 20vh;
+                    max-width: 120px;
+                }
+
+                &:nth-child(2), &:nth-child(7) {
+                    color: #4b49ac;
+                    cursor: pointer;
+                    font-weight: 700;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
+
+.popup-info, .popup-details {
+    .popup-title {
+        min-width: 370px;
+        text-align: center;
+        margin: 15px auto 0;
+
+        >p {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        >div {
+            position: absolute;
+            right:  5px;
+            top: 5px;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: transparent;
+
+            &:hover {
+                background: #f5f5f5;
+            }
+        }
+    }
+}
+
+.table-2 {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 10px 10px 0 0;
+
+    >tr {
+        &:first-child {
+            background: #4b49ac !important;
+            color: white;
+
+            >th {
+                text-align: center;
+                border-left: 1px solid white;
+
+                &:first-child {
+                    border-top-left-radius: 10px;
+                    border-left: none;
+                }
+
+                &:last-child {
+                    border-top-right-radius: 10px;
+                }
+            }
+        }
+
+        &:nth-child(odd) {
+            background-color: rgba(192, 192, 192, 0.267);
+        }
+
+        &:last-child {
+            border-bottom: 2px solid #4b49ac;
+        }
+
+        >td, >th {
+            padding: 8px;
+            border-bottom: 1px solid silver;
+            text-align: center;
+        }
+
+        >td {
+            border: 1px solid silver;
+        }
+    }
+}
+
+.popup-user-info {
+    border-collapse: collapse;
+    border: 1px solid silver;
+    margin-bottom: 10px;
+
+    >p {
+        display: flex;
+        gap: 15px;
+        justify-content: space-between;
+        margin: 0;
+        border-top: 1px solid silver;
+        padding: 12px 15px;
+
+        &:nth-child(1) {
+            border-top: none;
+        }
+    }
+}

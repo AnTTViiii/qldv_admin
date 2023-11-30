@@ -1,0 +1,108 @@
+table.table-1 {
+  border-collapse: collapse;
+  width: 100%;
+
+  > tr:nth-child(odd):not(:first-child) {
+    background-color: #e8e8e8;
+  }
+
+  > tr:not(:first-child) {
+    border-bottom: 1px solid silver;
+  }
+
+  > tr:nth-child(1) {
+    background-color: #4b49ac;
+    color: white;
+
+    > th {
+      padding: 10px 5px;
+
+      &:first-child {
+        border-top-left-radius: 10px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 10px;
+      }
+    }
+  }
+
+  > tr > td {
+    padding: 5px;
+    text-align: center;
+    overflow: hidden;
+    vertical-align: middle;
+
+    .col-name {
+      text-wrap: nowrap;
+      overflow-x: scroll;
+      text-align: left;
+      width: 20vw;
+    }
+
+    .edit-btn,
+    .del-btn {
+      color: white;
+      border-radius: 5px;
+      padding: 5px 10px;
+      width: fit-content;
+      display: inline-block;
+      text-align: center;
+      cursor: pointer;
+      margin: auto 5px;
+
+      &:hover {
+        box-shadow: 0px 3px 1.2rem #979797;
+      }
+    }
+
+    .edit-btn {
+      background-color: green !important;
+    }
+
+    .del-btn {
+      background-color: #ce252a !important;
+    }
+  }
+}
+
+.create-btn {
+  display: flex;
+  gap: 10px;
+  border-radius: 8px !important;
+  margin: 0 0 30px !important;
+}
+
+.create-ticket,
+.update-ticket {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+
+  .title {
+    >h1 {
+        font-size: 25px;
+    }
+  }
+
+  .submit-btn {
+    width: 100%;
+    text-transform: none;
+    background-color: #4b49ac;
+    height: 50px;
+    border-radius: 8px;
+
+    &:hover {
+      background-color: #4b49ac;
+    }
+  }
+}
+
+.disabled {
+  opacity: 0.3;
+}
