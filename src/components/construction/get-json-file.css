@@ -1,0 +1,51 @@
+.get-file-page {
+    display: grid;
+    grid-template-columns: 30% calc(70%);
+    margin: 20px;
+
+    .left-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding-right: 35px;
+        border-right: 1px dashed #aaa;
+    }
+
+    .right-panel {
+        border: 1px solid black;
+        border-radius: 10px;
+        margin-left: 35px;
+        height: 100%;
+        width: calc(100% - 35px);
+        background-color: white;
+
+        >pre {
+            padding: 10px;
+        }
+    }
+}
+
+.construction-wrapper {
+    .construction-navigation {
+        display: grid;
+        grid-template-columns: auto auto;
+
+        >a {
+            >div {
+                border-bottom: 3px solid transparent;
+                padding: 10px 10px 25px;
+                text-align: center;
+                font-weight: 700;
+            }
+
+            .active {
+                border-bottom: 3px solid #4b49ac;
+                color: #4b49ac;
+            }
+        }
+    }
+
+    .construction-page {
+        padding: 15px 0;
+    }
+}
