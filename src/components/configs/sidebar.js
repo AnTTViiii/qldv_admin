@@ -1,4 +1,4 @@
-import { GridViewRounded, Person2Rounded, AdminPanelSettingsRounded, BookOnlineRounded, LocalActivityRounded } from "@mui/icons-material"
+import { GridViewRounded, Person2Rounded, AdminPanelSettingsRounded, BookOnlineRounded, LocalActivityRounded, ChatRounded, AccountBalanceRounded } from "@mui/icons-material"
 
 const sidebar = [
     {
@@ -26,10 +26,22 @@ const sidebar = [
         text: 'Vé'
     },
     {
+        link: '/reviews',
+        section: 'reviews',
+        icon: <ChatRounded />,
+        text: 'Đánh giá'
+    },
+    {
         link: '/admin',
         section: 'admin',
         icon: <AdminPanelSettingsRounded />,
         text: 'Quản trị viên'
+    },
+    {
+        link: '/construction',
+        section: 'construction',
+        icon: <AccountBalanceRounded />,
+        text: 'Công trình'
     }
 ]
 

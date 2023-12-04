@@ -15,6 +15,8 @@ const SideBar = () => {
     const dispatch = useDispatch();
     const { account } = useSelector((state) => state.auth);
 
+    // const admin = useSelector((state) => state.auth.admin);
+    const role = 1;
     useEffect(() => {
         const curPath = window.location.pathname.split('/')[1];
         const activeItem = sidebar.findIndex(item => item.section === curPath);
@@ -51,7 +53,7 @@ const SideBar = () => {
             </div>
             <div className="sidebar__menu">
                 {
-                    sidebar.map((nav, index) => (
+                    sidebar.map((nav, index) => (role === 1 || (role !== 1 && index < 4)) && (
                         <Link to={nav.link} key={`nav-${index}`} 
                             className={`sidebar__menu__item ${activeIndex === index && 'active'}`} 
                             onClick={closeSideBar}
@@ -70,7 +72,7 @@ const SideBar = () => {
                         <LogoutRounded />
                     </div>
                     <div className="sidebar__menu__item__txt">
-                        Logout
+                        Đăng xuất
                     </div>
                 </div>
 

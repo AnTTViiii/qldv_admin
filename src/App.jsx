@@ -10,11 +10,12 @@ import AddTicket from "./pages/AddTicket";
 import EditTicket from "./pages/EditTicket";
 import Admin from "./pages/Admin";
 import { useSelector } from "react-redux";
+import Construction from "./pages/Construction";
+import Reviews from "./pages/Reviews";
 
 function App() {
   const { isAuthed } = useSelector((state) => state.auth);
   const admin = isAuthed ? JSON.parse(localStorage.getItem('admin')) : [];
-
   return (
     <BrowserRouter>
       <Routes>
@@ -26,7 +27,9 @@ function App() {
             <Route path="tickets" element={<Tickets />} />
             <Route path="new-ticket" element={<AddTicket />} />
             <Route path="edit-ticket/*" element={<EditTicket />} />
+            <Route path="reviews" element={<Reviews />} />
             <Route path="admin" element={<Admin />} />
+            <Route path="construction/*" element={<Construction />} />
             <Route path="*" element={<Dashboard />} />
           </Route>
         ) : (

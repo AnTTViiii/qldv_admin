@@ -74,3 +74,28 @@ body {
 .mb {
   margin-bottom: 30px;
 }
+
+.btn-main-theme {
+  background-color: #4b49ac !important;
+  text-transform: none !important;
+}
+
+.btn-del-theme {
+  background-color: #ce252a !important;
+  text-transform: none !important;
+}
+
+.radio-btn {
+  color: #4b49ac !important;
+}
+
+.select-box,
+.text-field {
+  background-color: white;
+  border-radius: 10px !important;
+}
+
+.large-btn {
+  padding: 13px !important;
+  border-radius: 10px !important;
+}

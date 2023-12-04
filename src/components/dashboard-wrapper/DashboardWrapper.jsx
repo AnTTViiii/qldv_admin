@@ -8,7 +8,7 @@ import {
 import axios from "axios";
 import OverallList from "../overall-list/OverallList";
 import SummaryBox from "../summary-box/SummaryBox";
-import ReviewStatistics from '../review/ReviewStatistics';
+import ReviewStatistics from '../review-overview/ReviewStatistics';
 import data from "../configs/data"
 import { colors } from "../configs/functions";
 

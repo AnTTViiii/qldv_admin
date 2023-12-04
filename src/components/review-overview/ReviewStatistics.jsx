@@ -1,7 +1,7 @@
 import React from 'react'
 import "./review-statistics.css"
 import data from '../configs/data'
-import { Rating, colors } from '@mui/material'
+import { Rating } from '@mui/material'
 
 const ReviewStatistics = () => {
   return (
@@ -13,7 +13,7 @@ const ReviewStatistics = () => {
             <td>{item.type}</td>
             <td>
               <p>
-                <Rating className='rating-star' value={item.rate} colors= "#4b49ac" precision={0.5} readOnly />
+                <Rating className='rating-star' value={item.rate} precision={0.5} readOnly />
                 <span>({item.numberOfReviews} lượt)</span>
               </p>
             </td>
