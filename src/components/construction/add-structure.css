@@ -10,15 +10,10 @@
         padding-right: 35px;
         border-right: 1px dashed #aaa;
 
-        .body-structure-type {
+        .structure-name {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-
-            .body-structure-type-radio {
-                margin-left: 30px;
-                margin-top: -20px;
-            }
+            gap: 30px;
         }
 
         .large-btn {
@@ -29,10 +24,17 @@
 
     .right-panel {
         margin-left: 35px;
+
         >div {
             display: flex;
             flex-direction: column;
             gap: 30px;
+
+            .body-type-radio {
+                display: flex;
+                flex-direction: row;
+                gap: 60px;
+            }
 
             .large-btn {
                 width: 400px !important;
@@ -64,6 +66,12 @@
                 gap: 10px;
                 color: #888;
                 cursor: pointer;
+            }
+
+            .simple-body, .complex-body, .insert-face-component {
+                display: flex;
+                flex-direction: column;
+                gap: 30px;
             }
         }
     }

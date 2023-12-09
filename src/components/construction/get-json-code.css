@@ -1,4 +1,4 @@
-.get-file-page {
+.get-code-page {
     display: grid;
     grid-template-columns: 30% calc(70%);
     margin: 20px;
@@ -15,13 +15,31 @@
         border: 1px solid black;
         border-radius: 10px;
         margin-left: 35px;
-        height: 100%;
+        height: 68vh;
         width: calc(100% - 35px);
         background-color: white;
+        overflow-y: scroll;
 
-        >pre {
+        >div {
             padding: 10px;
         }
+
+        .json-code {
+            padding-left: 20px !important;
+
+            >p {
+                padding-left: 20px !important;
+            }
+        }
+    }
+}
+
+.json-code {
+    padding-left: 20px !important;
+    background-color: blueviolet;
+
+    >p {
+        padding-left: 20px !important;
     }
 }
 

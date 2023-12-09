@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import GetGeoJSONFile from '../components/construction/GetGeoJSONFile'
+import GetGeoJSONCode from '../components/construction/GetGeoJSONCode'
 import { Link, useLocation } from 'react-router-dom';
 import AddStructure from '../components/construction/AddStructure';
 
@@ -9,7 +9,7 @@ const Construction = () => {
             name: 'XEM THÀNH PHẦN',
             url: '/construction',
             section: '',
-            page: GetGeoJSONFile
+            page: GetGeoJSONCode
         },
         {
             name: 'THÊM THÀNH PHẦN',
