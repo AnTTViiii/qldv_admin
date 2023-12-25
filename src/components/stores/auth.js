@@ -15,7 +15,7 @@ const AuthSlice = createSlice({
             localStorage.setItem("admin", JSON.stringify(action.payload));
             setTimeout(() => {
                 localStorage.removeItem("admin");
-            }, 24*60*60*1000);
+            }, 2*60*60*1000);
         },
         logout(state) {
             state.isAuthed = false;

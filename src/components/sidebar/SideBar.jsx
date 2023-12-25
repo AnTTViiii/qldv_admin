@@ -10,13 +10,14 @@ import { Transition } from '../configs/functions'
 
 const SideBar = () => {
     const navigate = useNavigate();
-    const [activeIndex, setActiveIndex] = useState(0);
     const location = useLocation();
     const dispatch = useDispatch();
-    const { account } = useSelector((state) => state.auth);
 
-    // const admin = useSelector((state) => state.auth.admin);
-    const role = 1;
+    const [activeIndex, setActiveIndex] = useState(0);
+    
+    const { isAuthed, account } = useSelector((state) => state.auth);
+    const admin = isAuthed ? JSON.parse(localStorage.getItem('admin')) : [];
+
     useEffect(() => {
         const curPath = window.location.pathname.split('/')[1];
         const activeItem = sidebar.findIndex(item => item.section === curPath);
@@ -53,7 +54,7 @@ const SideBar = () => {
             </div>
             <div className="sidebar__menu">
                 {
-                    sidebar.map((nav, index) => (role === 1 || (role !== 1 && index < 4)) && (
+                    sidebar.map((nav, index) => (admin.role.id === 2 || (admin.role.id !== 2 && index < 4)) && (
                         <Link to={nav.link} key={`nav-${index}`} 
                             className={`sidebar__menu__item ${activeIndex === index && 'active'}`} 
                             onClick={closeSideBar}

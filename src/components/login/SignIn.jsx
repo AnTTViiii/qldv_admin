@@ -32,32 +32,27 @@ const SignIn = () => {
 
     // sign in successfully
     event.preventDefault();
-    setError(null);
-    setShowAlert(false);
-    const account = [email, password];
-    dispatch(authActions.setAuth(account));
-    navigate("/");
 
-    // const admin = { 
-    //   email: email,
-    //   pw: password,
-    // };
-    // await axios.post('http://localhost:9090/api/accounts/signin/admin', admin)
-    //   .then((res) => {
-    //     console.log(res.data);
-    //     if (res.data.email === undefined) {
-    //       return setAlertError("Tài khoản này không phải là admin!");
-    //     } else {
-    //       setError(null);
-    //       setShowAlert(false);
-    //       const account = res.data;
-    //       dispatch(authActions.setAuth(account));
-    //       navigate("/");
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   })
+    const admin = { 
+      email: email,
+      password: password,
+    };
+    await axios.post('http://localhost:9090/api/users/signin2?role=2', admin)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.email === undefined) {
+          return setAlertError("Tài khoản này không phải là admin!");
+        } else {
+          setError(null);
+          setShowAlert(false);
+          const account = res.data;
+          dispatch(authActions.setAuth(account));
+          navigate("/");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   };
 
   return (
@@ -67,8 +62,8 @@ const SignIn = () => {
           <HttpsRounded className='signin-icon' fontSize='large' />
           ADMIN DASHBOARD
         </h3>
-        <TextField inputRef={emailRef} fullWidth id="outlined-basic" className='login-email' label="Email" type='email' variant="outlined" />
-        <TextField inputRef={passRef} fullWidth id="outlined-basic" className='login-password' label="Mật khẩu" type='password' variant="outlined" />
+        <TextField inputRef={emailRef} fullWidth className='login-email' label="Email" type='email' variant="outlined" />
+        <TextField inputRef={passRef} fullWidth className='login-password' label="Mật khẩu" type='password' variant="outlined" />
 
         <Button variant="contained" fullWidth className='login-submit' color="error" onClick={handleLogin}>                             
             Đăng nhập

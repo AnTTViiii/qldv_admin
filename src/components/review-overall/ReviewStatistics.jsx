@@ -1,23 +1,33 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import "./review-statistics.css"
-import data from '../configs/data'
 import { Rating } from '@mui/material'
+import axios from 'axios'
+import { capitalize } from '../configs/functions'
 
 const ReviewStatistics = () => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    axios.get("http://localhost:9090/api/reviews/statistic")
+      .then((res) => {
+        setData(res.data)
+      })
+      .catch((err) => console.log(err))
+  }, [data])
+  
   return (
     <div className='review-statistics-wrapper box'>
       <div className="title mbc">Tổng quan đánh giá</div>
       <table className="review-statistics">
-        {data.reviewStatistics.map((item) => (
+        {data.map((item) => (
           <tr className="review-statistics-item">
-            <td>{item.type}</td>
+            <td>{item.tagRate.tag.name}</td>
             <td>
               <p>
-                <Rating className='rating-star' value={item.rate} precision={0.5} readOnly />
-                <span>({item.numberOfReviews} lượt)</span>
+                <Rating className='rating-star' value={item.tagRate.rate} precision={0.5} readOnly />
+                <span>({item.count} lượt)</span>
               </p>
             </td>
-            <td>{item.tag}</td>
+            <td>{capitalize(item.tagRate.content)}</td>
           </tr>
         ))}
       </table>

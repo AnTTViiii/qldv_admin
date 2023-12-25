@@ -1,25 +1,30 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { Transition, bookingStatus, dot3digits, getBookingStatusNotify } from '../configs/functions';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select } from '@mui/material';
+import { Dialog, DialogContent, MenuItem, Select } from '@mui/material';
 import './booking-list.css'
-import { Bookings } from '../configs/tData'
 
 const BookingList = () => {
     const [booking, setBooking] = useState([]);
     useEffect(() => {
-    //     axios.get(`http://localhost:9090/api/bookings`)
-    //         .then(response => {
-    //             setBooking(response.data);
-    //         });
+        axios.get(`http://localhost:9090/api/bookings`)
+            .then(response => {
+                setBooking(response.data.reverse());
+            })
+            .catch((err) => {console.log(err)});
     }, []);
     
     async function updateStatus(e, id) {
         e.preventDefault();
         console.log(e.target.value);
         try {
-            await axios.put(`http://localhost:9090/api/bookings/${id}/status/${e.target.value}`);
-            alert('Đơn hàng #' + id + ' ' + getBookingStatusNotify(e.target.value) + '.')
+            const status = { status: e.target.value }
+            await axios.put(`http://localhost:9090/api/bookings/${id}/update-status`, status)
+                .then((res) => {
+                    alert('Đơn hàng #' + id + ' ' + getBookingStatusNotify(e.target.value) + '.')
+                })
+                .catch((err) => { console.log(err) });
+            
         } catch (error) {
             alert(error);
         }
@@ -48,15 +53,15 @@ const BookingList = () => {
                     <th>Chi tiết</th>
                     <th>Trạng thái</th>
                 </tr>
-                {Bookings.map((item) => (
+                {booking.map((item) => (
                     <tr>
                         <td>{item.id}</td>
                         <td><p onClick={() => {openUserInfoPopup(); setUserInfo(item.user)}}>ID {item.user.id}</p></td>
-                        <td>{new Date(item.booking_date).toLocaleString()}</td>
-                        <td>{new Date(item.touring_date).toLocaleString()}</td>
+                        <td>{new Date(item.bookingDate).toLocaleString()}</td>
+                        <td>{new Date(item.touringDate).toLocaleString().split(" ")[1]}</td>
                         <td>{item.quantity}</td>
-                        <td>{dot3digits(item.total)} đ</td>
-                        <td><p onClick={() => {openBookingDetailPopup(); setBookingDetail(item.details)}}>Xem</p></td>
+                        <td>{dot3digits(item.totalPrice)} đ</td>
+                        <td><p onClick={() => {openBookingDetailPopup(); setBookingDetail(item.bookingDetails)}}>Xem</p></td>
                         <td>
                             <Select className='select-box' defaultValue={item.status} size='small' onChange={(e) => updateStatus(e, item.id)}>
                                 {bookingStatus.map((status, index) =>  (
@@ -113,7 +118,7 @@ export const BookingDetails = ({details}) => {
                     <td>{index+1}</td>
                     <td>{d.ticket.type}</td>
                     <td>{d.quantity}</td>
-                    <td>{dot3digits(d.total)} đ</td>
+                    <td>{dot3digits(d.totalPrice)} đ</td>
                 </tr>
             ))}
         </table>

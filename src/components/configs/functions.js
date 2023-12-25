@@ -18,8 +18,6 @@ export const bookingStatus = [
     "Từ chối"
 ]
 
-export const roles = ["Quản trị viên", "Kế toán viên", "Người dùng"]
-
 export const getBookingStatusNotify = (status) => {
     if (status === 1) return "đã được duyệt";
     else if (status === 2) return "đã bị từ chối";
@@ -50,6 +48,6 @@ export const Transition = forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const getGender = (gender) => {
-    return gender === 1 ? 'Nữ' : (gender === 0 ? 'Nam' : 'Khác')
+export const capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1)
 }

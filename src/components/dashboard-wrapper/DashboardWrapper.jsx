@@ -9,7 +9,6 @@ import axios from "axios";
 import OverallList from "../overall-list/OverallList";
 import SummaryBox from "../summary-box/SummaryBox";
 import ReviewStatistics from '../review-overall/ReviewStatistics';
-import data from "../configs/data"
 import { colors } from "../configs/functions";
 
 ChartJS.register(
@@ -18,71 +17,55 @@ ChartJS.register(
 );
 
 const DashboardWrapper = () => {
-    // const [summary, setSummary] = useState([
-  //   {
-  //     title: "Sản phẩm bán chạy nhất",
-  //     subtitle: "",
-  //     value: 0,
-  //     percent: 0,
-  //     unit: "sản phẩm",
-  //   },
-  //   {
-  //     title: "Loại xe bán chạy nhất",
-  //     subtitle: "",
-  //     value: 0,
-  //     percent: 0,
-  //     unit: "đ",
-  //   },
-  //   {
-  //     title: "Hãng xe bán chạy nhất",
-  //     subtitle: "",
-  //     value: 0,
-  //     percent: 0,
-  //     unit: "đ",
-  //   },
-  // ]);
+    const [summary, setSummary] = useState([
+        {
+            title: "Loại vé bán chạy nhất",
+            subtitle: "",
+            value: 0,
+            percent: 0,
+            unit: "vé",
+        },
+        {
+            title: "Tháng có doanh thu cao nhất",
+            subtitle: "",
+            value: 0,
+            percent: 0,
+            unit: "đ",
+        },
+    ]);
 
-  // useEffect(() => {
-  //   const endpoints = [
-  //     `http://localhost:9090/api/invoices/bestsell/product`,
-  //     `http://localhost:9090/api/invoices/bestsell/type`,
-  //     `http://localhost:9090/api/invoices/bestsell/brand`,
-  //     `http://localhost:9090/api/invoices/revenue`,
-  //   ];
+    useEffect(() => {
+        const endpoints = [
+            `http://localhost:9090/api/statistic/fastest-tickets`,
+            `http://localhost:9090/api/statistic/revenue-months`
+        ];
 
-  //   Promise.all(endpoints.map((endpoint) => axios.get(endpoint))).then(
-  //     (responses) => {
-  //       setSummary([
-  //         {
-  //           ...summary[0],
-  //           subtitle: responses[0].data.product.name,
-  //           value: responses[0].data.quantity,
-  //           percent:
-  //             ((responses[0].data.product.price * responses[0].data.quantity) /
-  //               responses[3].data) *
-  //             100,
-  //         },
-  //         {
-  //           ...summary[1],
-  //           subtitle: responses[1].data[1],
-  //           value: responses[1].data[2],
-  //           percent: (responses[1].data[2] / responses[3].data) * 100,
-  //         },
-  //         {
-  //           ...summary[2],
-  //           subtitle: responses[2].data[1],
-  //           value: responses[2].data[3],
-  //           percent: (responses[2].data[3] / responses[3].data) * 100,
-  //         },
-  //       ]);
-  //     }
-  //   );
-  // }, [summary]);
+        Promise.all(endpoints.map((endpoint) => axios.get(endpoint))).then((responses) => 
+        {
+            const revenues = responses[1].data.revenues;
+
+            setSummary([
+                {
+                    ...summary[0],
+                    subtitle: responses[0].data.type,
+                    value: responses[0].data.quantity,
+                    percent: responses[0].data.percents
+                },
+                {
+                    ...summary[1],
+                    subtitle: responses[1].data.months[revenues.indexOf(Math.max(...revenues))],
+                    value: Math.max(...revenues),
+                    percent: (Math.max(...revenues) / revenues.reduce((a, b) => a + b, 0)) * 100,
+                }
+            ]);
+        })
+        .catch((err) => console.log(err[0], err[1]));
+    }, [summary]);
     return (
         <div className='dashboard-wrapper'>
             <OverallList />
             <div className="mb summary-box-wrapper">
-                {data.summary.map((item) => (
+                {summary.map((item) => (
                     <SummaryBox item={item} />
                 ))}
             </div>
@@ -95,14 +78,15 @@ const DashboardWrapper = () => {
 export default DashboardWrapper
 
 const RevenueByMonthsChart = () => {
-    // const [revenueByMonths, setRevenueByMonths] = useState([]);
-    // useEffect(() => {
-    //   axios
-    //     .get(`http://localhost:9090/api/invoices/revenuebymonth`)
-    //     .then((response) => {
-    //       setRevenueByMonths(response.data);
-    //     });
-    // }, [revenueByMonths]);
+    const [revenueByMonths, setRevenueByMonths] = useState([]);
+    useEffect(() => {
+      axios
+        .get(`http://localhost:9090/api/statistic/revenue-months`)
+        .then((response) => {
+            setRevenueByMonths(response.data);
+        })
+        .catch((err) => {console.log(err)});
+    }, [revenueByMonths]);
   
     const chartOptions = {
         responsive: true,
@@ -116,8 +100,8 @@ const RevenueByMonthsChart = () => {
             },
             yAxes: {
                 grid: {
-                    display: false,
-                    drawBorder: false,
+                    display: true,
+                    drawBorder: true,
                 },
             },
         },
@@ -138,11 +122,11 @@ const RevenueByMonthsChart = () => {
         },
     };
     const chartData = {
-        labels: data.revenueByMonths.labels,
+        labels: revenueByMonths.months,
         datasets: [
             {
-            label: "Doanh thu",
-            data: data.revenueByMonths.data,
+                label: "Doanh thu",
+                data: revenueByMonths.revenues,
             },
         ],
     };
@@ -150,7 +134,7 @@ const RevenueByMonthsChart = () => {
         <div className="box mb">
             <div className="title mbc">Doanh thu trong 12 tháng gần nhất</div>
             <div>
-                <Bar options={chartOptions} data={chartData} height={`300px`} />
+                <Bar options={chartOptions} data={chartData} height={`270px`} />
             </div>
         </div>
     );

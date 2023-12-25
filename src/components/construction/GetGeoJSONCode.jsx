@@ -1,21 +1,73 @@
-import { Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { Button, FormControl, InputLabel, MenuItem, Pagination, Select } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import "./get-json-code.css"
-import { floor_level, simple_structure, simple_body, complex_body } from '../configs/components'
+import { floor_level, simple_structure, simple_body } from '../configs/components'
+import { complex_body } from '../construction/test'
+import usePagination from '../configs/Pagination'
+import axios from 'axios'
 
 const GetGeoJSONCode = () => {
-  const [floor, setFloor] = useState(0)
+  const [floorList, setFloorList] = useState([])
+
+  useEffect(() => {
+    axios.get('http://localhost:9090/api/floor-levels')
+      .then((res) => {
+          setFloorList(res.data)
+      })
+      .catch((err) => console.log(err))
+  }, [floorList])
+
+
+  const [floor, setFloor] = useState(1)
+
   const [structType, setStructType] = useState(-1)
+
+  const [structName, setStructName] = useState([])
+  const [selectStructName, setSelectStructName] = useState([])
+
   const [structBody, setStructBody] = useState(-1)
   const [component, setComponent] = useState([])
+
   const [face, setFace] = useState([])
   const [nodes, setNodes] = useState([])
 
-  console.log(component, nodes)
+  useEffect(() => {
+    if (structType === 0) {
+      axios.get('http://localhost:9090/api/simp-structures/floorlevel/' + floor)
+        .then((res) => {
+          setStructName(res.data)
+        })
+        .catch((err) => console.log(err))
+    } else {
+      axios.get('http://localhost:9090/api/comp-structures/floor/' + floor)
+        .then((res) => {
+          setStructName(res.data)
+        })
+        .catch((err) => console.log(err))
+      if (structBody === 0) {
+        axios.get(`http://localhost:9090/api/simp-bodies/comp-structure/${selectStructName}`)
+          .then((res) => {
+            setComponent(res.data)
+          })
+          .catch((err) => console.log(err))
+      } else {
+        axios.get(`http://localhost:9090/api/comp-bodies/comp-structure/${selectStructName}`)
+          .then((res) => {
+            setComponent(res.data)
+          })
+          .catch((err) => console.log(err))
+      }
+    }
+    
 
-  useEffect(()=>{},[component, face, nodes])
+    
+    
+      axios.get('')
+        .then((res) => {
 
-  console.log(floor, structType, structBody)
+        })
+        .catch((err) => console.log(err))
+  }, [floor, selectStructName, structBody, structName, structType])
 
   const handleGetComponent = (value) => {
     setComponent(value)
@@ -26,79 +78,29 @@ const GetGeoJSONCode = () => {
     }
   }
 
-  const handleGenerateCode = () => {
-    const pre = document.getElementById('json-code')
-    pre.innerHTML = ''
-    let code = `
-    <div>
-      &#123;
-        <div>
-        &emsp;"type": "FeatureCollection", <br/>
-        &emsp;"features": [
-          <div>
-          &emsp;&emsp;&#123;
-            <div>
-            &emsp;&emsp;&emsp;"type": "Feature", <br/>
-            &emsp;&emsp;&emsp;"properties": &#123;
-              <div>
-              &emsp;&emsp;&emsp;&emsp;"name": `+ component.name +`,<br/>
-              &emsp;&emsp;&emsp;&emsp;"height": `+ component.height + `,<br/>
-              &emsp;&emsp;&emsp;&emsp;"color": `+ component.color + `<br/>
-              </div>
-            &emsp;&emsp;&emsp;&#125;, <br/>
-            &emsp;&emsp;&emsp;"geometry": &#123;
-              <div>
-              &emsp;&emsp;&emsp;&emsp;"type": "` + (structType === 1 && structBody === 1 ? `MultiPolygon` : `Polygon`) + `", <br/>
-              &emsp;&emsp;&emsp;&emsp;"coordinates": [
-                <div>`;
+  const [page, setPage] = useState(1);
+  const PER_PAGE = 1;
 
-    if (structType === 1 && structBody === 1) {
-      complex_body.map((complex) => complex.id_complex_body === component.id_complex_body && (
-        complex.faces.map((f, idx) => {
-            code += `&emsp;&emsp;&emsp;&emsp;&emsp;[
-              <div>
-              &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[`;
-            f.face.node.map((n, index) => (
-              code += `<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[`+n.x+`, `+n.y+`, `+n.z+`]`+(index === f.face.node.length - 1 ? '' : ',')+`</p>`
-            ))
-            console.log(f.face.id_face)
-            code += `&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;]
-              </div>
-              &emsp;&emsp;&emsp;&emsp;&emsp;]` + (idx === face.length - 1 ? '' : ',<br/>')
-        })
-      ))
-    } else {
-      code += `&emsp;&emsp;&emsp;&emsp;&emsp;[`
-      nodes.map((n, index) => (
-        code += `<p>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;[`+n.x+`, `+n.y+`, `+n.z+`]`+(index === nodes.length - 1 ? '' : ',')+`</p>`
-      ))
-      code += `&emsp;&emsp;&emsp;&emsp;&emsp;]`
-    }
-                
-    code += `
-                </div>
-                &emsp;&emsp;&emsp;&emsp;]
-              </div>
-              &emsp;&emsp;&emsp;&#125;
-            </div>
-            &emsp;&emsp;&#125;
-          </div>
-          &emsp;]
-        </div>
-      &#125;
-    </div>
-    `
-    console.log(code)
-    pre.innerHTML = code
+  const count = component.components !== undefined ? Math.ceil(component.components.length / PER_PAGE) : 1;
+  const _data = usePagination(component.components !== undefined ? component.components : [], PER_PAGE);
+
+  const handleChangePage = (e, p) => {
+    setPage(p);
+    _data.jump(p);
+  };
+
+  const [showCode, setShowCode] = useState(false)
+  const handleGenerateCode = () => {
+    setShowCode(true)
   }
   return (
     <div className='get-code-page'>
       <div className="left-panel">
         <FormControl>
             <InputLabel id="floor-title">-- Chọn tầng --</InputLabel>
-            <Select labelId='floor-title' className='select-box' onChange={e => setFloor(e.target.value)}>
-                {floor_level.map((floor) => (
-                  <MenuItem value={floor.id_floorlevel}>{floor.name}</MenuItem>
+            <Select labelId='floor-title' defaultValue={floor} className='select-box' onChange={e => setFloor(e.target.value)}>
+                {floorList.map((floor) => (
+                  <MenuItem value={floor.id}>{floor.name}</MenuItem>
                 ))}
             </Select>
         </FormControl>
@@ -111,7 +113,16 @@ const GetGeoJSONCode = () => {
             </Select>
         </FormControl>
 
-        <FormControl disabled={structType === 0 ? true: false}>
+        <FormControl className='select-form' disabled={structType === -1 ? true: false}>
+            <InputLabel id="struct-name-title">-- Chọn kiến trúc --</InputLabel>
+            <Select labelId='struct-name-title' className='select-box' onChange={e => setStructType(e.target.value)} >
+                {structName.map((struct) => (
+                  <MenuItem value={struct.id}>{struct.name}</MenuItem>
+                ))}
+            </Select>
+        </FormControl>
+
+        <FormControl disabled={structType !== 1 ? true: false}>
             <InputLabel id="body-title">-- Chọn loại thành phần --</InputLabel>
             <Select labelId='body-title' className='select-box' onChange={e => setStructBody(e.target.value)}>
                 <MenuItem value={0}>Đơn giản</MenuItem>
@@ -119,8 +130,8 @@ const GetGeoJSONCode = () => {
             </Select>
         </FormControl>
 
-        <FormControl>
-            <InputLabel id="component-title">-- Chọn thành phần --</InputLabel>
+        <FormControl disabled={(structType !== 1) || (structBody === -1) ? true: false}>
+            <InputLabel id="component-title" >-- Chọn thành phần --</InputLabel>
             <Select labelId='component-title' className='select-box' onChange={e => handleGetComponent(e.target.value)} >
               {
                 structType === 0 ? (
@@ -146,7 +157,109 @@ const GetGeoJSONCode = () => {
         <Button variant='contained' className='btn-main-theme large-btn' onClick={handleGenerateCode}>Tạo mã GeoJSON</Button>
         <Button variant='contained' className="btn-del-theme large-btn">Xóa thành phần</Button>
       </div>
-      <div id='json-code' className="right-panel"></div>
+      <div className="right-panel">
+        {showCode ? (
+        <>
+          {
+            structType === 1 && structBody === 1 ? (
+              <div className='code-pool'>
+                {
+                  _data.currentData().map((data) => (
+                    <div>
+                    &#123;
+                      <div className="json-code">
+                      "type": "FeatureCollection", <br/>
+                      "features": [
+                        <div className="json-code">
+                        &#123;
+                          <div className="json-code">
+                          "type": "Feature", <br/>
+                          "properties": &#123;
+                            <div className="json-code">
+                            "name": "{data.name}",<br/>
+                            "size": {data.height},<br/>
+                            "color": "{data.color}"<br/>
+                            </div>
+                          &#125;, <br/>
+                          "geometry": &#123;
+                            <div className="json-code">
+                            "type": "MultiPolygon", <br/>
+                            "coordinates": [
+                              <div className="json-code">
+                              {data.faces.map((f, idx) => (
+                                  <>[
+                                    <div className="json-code">
+                                    [
+                                    {f.face.node.map((n, index) => (
+                                      <p>[{n.x}, {n.y}, {n.z}]{index === f.face.node.length - 1 ? '' : ','}</p>
+                                    ))}
+                                    ]
+                                    </div>
+                                  ]{idx === data.faces.length - 1 ? '' : ','}<br/></>
+                              ))}
+                              </div>
+                            ]
+                            </div>
+                          &#125;
+                          </div>
+                        &#125;
+                        </div>
+                      ]
+                      </div>
+                    &#125;
+                    </div>
+                  ))
+                }
+              </div>
+            ) : (
+              <div className='code-pool'>
+              &#123;
+                <div className="json-code">
+                "type": "FeatureCollection", <br/>
+                "features": [
+                  <div className="json-code">
+                  &#123;
+                    <div className="json-code">
+                    "type": "Feature", <br/>
+                    "properties": &#123;
+                      <div className="json-code">
+                      "name": "{component.name}",<br/>
+                      "size": {component.height},<br/>
+                      "color": "{component.color}"<br/>
+                      </div>
+                    &#125;, <br/>
+                    "geometry": &#123;
+                      <div className="json-code">
+                      "type": "Polygon", <br/>
+                      "coordinates": [
+                        <div className="json-code">
+                        [
+                          {nodes.map((n, index) => (
+                            <p>[{n.x}, {n.y}, {n.z}]{index === nodes.length - 1 ? '' : ','}</p>
+                          ))}
+                        ]
+                        </div>
+                      ]
+                      </div>
+                    &#125;
+                    </div>
+                  &#125;
+                  </div>
+                ]
+                </div>
+              &#125;
+              </div>
+            )
+          }
+
+          {structType === 1 && structBody === 1 ? (
+            <Pagination count={count} size="large" page={page} className='pagination'
+              variant="outlined" shape="rounded" onChange={handleChangePage}/>
+          ) : ('')}
+        </>
+        ) : ('')}
+
+      </div>
     </div>
   )
 }

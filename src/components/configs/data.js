@@ -1,8 +1,4 @@
 const data = {
-    user: {
-        name: 'bi_liiii__',
-        img: 'http://res.cloudinary.com/dpwehcnso/image/upload/v1693763004/xa5jadz41gptqmzdvd9z.png'
-    },
     summary: [
         {
             title: 'Loại vé bán chạy nhất',

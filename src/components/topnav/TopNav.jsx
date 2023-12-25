@@ -11,7 +11,7 @@ const TopNav = () => {
   const admin = useSelector((state) => state.auth.admin);
   return (
     <div className="topnav">
-      <UserInfo user={admin} />
+      <UserInfo admin={admin} />
       <div className="sidebar-toggle" onClick={openSideBar}>
         <MenuRounded className="icon" />
       </div>

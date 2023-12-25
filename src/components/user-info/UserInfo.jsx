@@ -9,7 +9,7 @@ const UserInfo = ({ admin }) => {
         <PersonRounded className="person-icon" />
       </div>
       <div className="user-info__name">
-        <span>Viii</span>
+        <span>{admin.name}</span>
       </div>
     </div>
   );
