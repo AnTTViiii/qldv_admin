@@ -30,6 +30,23 @@
             flex-direction: column;
             gap: 30px;
 
+            .complex-truct-body-name {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                >button {
+                    width: 100px;
+                    height: 56px;
+                    border-radius: 10px !important;
+                    margin: 0 !important;
+                }
+
+                >div  {
+                    width: 30% !important;
+                }
+            }
+
             .body-type-radio {
                 display: flex;
                 flex-direction: row;

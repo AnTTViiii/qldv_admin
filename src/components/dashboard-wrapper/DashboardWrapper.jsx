@@ -100,8 +100,8 @@ const RevenueByMonthsChart = () => {
             },
             yAxes: {
                 grid: {
-                    display: true,
-                    drawBorder: true,
+                    display: false,
+                    drawBorder: false,
                 },
             },
         },
