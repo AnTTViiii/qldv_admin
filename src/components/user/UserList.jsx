@@ -13,7 +13,7 @@ function UserList() {
   useEffect(() => {
     axios.get("http://localhost:9090/api/users")
       .then((response) => {
-        setData(response.data);
+        setData(response.data.reverse());
       })
       .catch((error) => {
         console.log(error);
@@ -47,7 +47,7 @@ function UserList() {
           <th>Email</th>
           <th>Phân quyền</th>
         </tr>
-        {data.map((item) => (
+        {data && data.map((item) => (
           <tr>
             <td>{item.id}</td>
             <td>{item.name}</td>
@@ -56,7 +56,7 @@ function UserList() {
             <td>
               {admin.role.id === 2 ? (
                 <Select className='select-box' defaultValue={item.role.id} size='small' onChange={(e) => updateRole(e, item.id)}>
-                  {roles.map((role) =>  (
+                  {roles && roles.map((role) =>  (
                     <MenuItem value={role.id}>{role.type}</MenuItem>
                   ))}
                 </Select>

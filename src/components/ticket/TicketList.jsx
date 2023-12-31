@@ -59,7 +59,7 @@ const TicketList = () => {
                     ) : ('')}
                 </tr>
                 {
-                    data.map((t) => (
+                    data && data.map((t) => (
                         <tr>
                             <td>{t.id}</td>
                             <td>{t.type}</td>

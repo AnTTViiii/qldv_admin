@@ -178,13 +178,23 @@ const GetGeoJSONCode = () => {
 
   const PER_PAGE = 1;
 
-  const count = result.components !== undefined ? Math.ceil(result.components.length / PER_PAGE) : 1;
+  const count = result.components !== undefined ? Math.ceil(result.components.length / PER_PAGE) : 0;
   const _data = usePagination(result.components !== undefined ? result.components : [], PER_PAGE);
 
   const handleChangePage = (e, p) => {
     setPage(p);
     _data.jump(p);
   };  
+
+  const handleCopyCode = async () => {
+    try {
+      const content = document.getElementById('code').innerText
+      await navigator.clipboard.writeText(content);
+      console.log('Content copied to clipboard');
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  }
 
   return (
     <div className='get-code-page'>
@@ -209,7 +219,7 @@ const GetGeoJSONCode = () => {
         <FormControl className='select-form' disabled={structType === -1 ? true: false}>
             <InputLabel id="struct-name-title">-- Chọn kiến trúc --</InputLabel>
             <Select labelId='struct-name-title' className='select-box' onChange={e => setSelectStructName(e.target.value)} >
-                {structName.map((struct) => (
+                {structName.length > 0 && structName.map((struct) => (
                   <MenuItem value={struct.id}>{struct.name}</MenuItem>
                 ))}
             </Select>
@@ -246,7 +256,7 @@ const GetGeoJSONCode = () => {
         <>
           {
             codeType === 1 ? (
-              <div className='code-pool'>
+              <div id='code' className='code-pool'>
                 {
                   _data.currentData().map((data) => (
                     <div>
@@ -275,7 +285,7 @@ const GetGeoJSONCode = () => {
                                     <div className="json-code">
                                     [
                                     {f.face.nodes.map((n, index) => (
-                                      <p>[{n.x}, {n.y}, {n.z}]{index === f.face.nodes.length - 1 ? '' : ','}</p>
+                                      <p>[{n.x}, {n.y}{n.z !== 0.0 ? ', ' + n.z : ''}]{index === f.face.nodes.length - 1 ? '' : ','}</p>
                                     ))}
                                     ]
                                     </div>
@@ -297,7 +307,7 @@ const GetGeoJSONCode = () => {
               </div>
             ) : (
               codeType === 0 ? (
-                <div className='code-pool'>
+                <div id='code' className='code-pool'>
                 &#123;
                   <div className="json-code">
                   "type": "FeatureCollection", <br/>
@@ -320,7 +330,7 @@ const GetGeoJSONCode = () => {
                           <div className="json-code">
                           [
                             {result.face !== undefined ? (result.face.nodes.map((n, index) => (
-                              <p>[{n.x}, {n.y}, {n.z}]{index === result.face.nodes.length - 1 ? '' : ','}</p>
+                              <p>[{n.x}, {n.y}{n.z !== 0.0 ? ', ' + n.z : ''}]{index === result.face.nodes.length - 1 ? '' : ','}</p>
                             ))) : ('')}
                           ]
                           </div>
@@ -345,6 +355,8 @@ const GetGeoJSONCode = () => {
                 variant="outlined" shape="rounded" onChange={handleChangePage}/>
             ) : ('')}
           </div>
+
+          <Button variant='contained' className='btn-main-theme copy-btn' onClick={handleCopyCode}>Sao chép</Button>
         </>
         ) : ('')}
         

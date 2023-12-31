@@ -45,7 +45,7 @@ function AdminList() {
           <th>Vai trò</th>
           <th>Thao tác</th>
         </tr>
-        {data.map((item) => item.role.id !== 1 && (
+        {data && data.map((item) => item.role.id !== 1 && (
           <tr>
             <td>{item.id}</td>
             <td>{item.email}</td>

@@ -23,6 +23,7 @@ const AddStructure = () => {
         axios.post('http://localhost:9098/api/floor-levels/construction/1', body)
             .then((res) => {
                 alert("Thêm " + res.data.name + " thành công!")
+                floorRef.current.value = ''
             })
             .catch((err) => {
                 console.log(err)
@@ -44,14 +45,28 @@ const AddStructure = () => {
         const color = simpStructColorRef.current.value
         const inputCoords = simpStructCoordsRef.current.value
 
-        // const formatInputFace = /^(\s*\[\s*-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?(,\s*-?\d+(\.\d+)?)?\]\s*,?\s*)+$/;
-
         if (!name || !height || !color || !inputCoords)
             return alert("Vui lòng điền đủ các trường trong form bên phải!")
         else if (floor < 1)
             return alert("Vui lòng chọn tầng!")
         else {
-            axios.post('http://localhost:9098/api/faces')
+            const regex = /\[(.*?), (.*?)(?:, (.*?))?\]/g;
+            let match;
+            const listCoords = [];
+            while ((match = regex.exec(inputCoords)) !== null) {
+                const coords = {
+                    x: parseFloat(match[1]), 
+                    y: parseFloat(match[2]),
+                    z: match[3] ? parseFloat(match[3]) : 0.0
+                }
+                listCoords.push(coords);
+            }
+
+            const bodyFace = {
+                nodes: listCoords
+            }
+
+            axios.post('http://localhost:9098/api/faces/create', bodyFace)
                 .then((face) => {
                     const body = {
                         name: name,
@@ -63,46 +78,14 @@ const AddStructure = () => {
 
                     axios.post('http://localhost:9098/api/simp-structures', body)
                         .then((res) => {
-                            const regex = /\[(.*?), (.*?)(?:, (.*?))?\]/g;
-                            let match;
-                            const listCoords = [];
-
-                            while ((match = regex.exec(inputCoords)) !== null) {
-                                const coords = [parseFloat(match[1]), parseFloat(match[2])];
-                                if (match[3]) {
-                                    coords.push(parseFloat(match[3]));
-                                }
-                                listCoords.push(coords);
-                            }
-
-                            console.log(listCoords)
-                            listCoords.map((coord) => {
-                                const node = {
-                                    x: coord[0],
-                                    y: coord[1],
-                                    z: coord[2] !== undefined ? coord[2] : 1
-                                }
-
-                                axios.post('http://localhost:9098/api/nodes', node)
-                                    .then((node) => {
-                                        axios.put(`http://localhost:9098/api/faces/${face.data.id}/nodes/${node.data.id}`)
-                                            .catch((err) => {
-                                                console.log('FaceNode: ' + err);
-                                            })
-                                    })
-                                    .catch((err) => {console.log('Node: ' + err)})
-                            })
-                            
-                            // var i = 0
-                            // while (i < listCoords.length) {
-                                
-                            // }
                             alert("Thêm thành công!")
                             simpStructNameRef.current.value = ''
                             simpStructHeightRef.current.value = ''
                             simpStructCoordsRef.current.value = ''
                         })
                         .catch((err) => {console.log('Simple Structure: ' + err)})
+
+                    console.log(body)
                 })
                 .catch((err) => {console.log('Face: ' + err);})
         }
@@ -131,20 +114,16 @@ const AddStructure = () => {
     const [selectedComplexStruct, setSelectedComplexStruct] = useState([])
 
     useEffect(() => {
-        // if (floor > 0) {
-            axios.get('http://localhost:9098/api/comp-structures/floor/' + floor)
-                .then((res) => {
-                    console.log(res.data)
-                    if(res.data.length > 0) {
-                        setComplexStruct(res.data)
-                        console.log("ko null")
-                    } else {
-                        console.log("nulllll")
-                        setComplexStruct([])
-                    }
-                })
-                .catch((err) => console.log(err))
-        // }
+        axios.get('http://localhost:9098/api/comp-structures/floor/' + floor)
+            .then((res) => {
+                console.log(res.data)
+                if(res.data.length > 0) {
+                    setComplexStruct(res.data)
+                } else {
+                    setComplexStruct([])
+                }
+            })
+            .catch((err) => console.log(err))
         
     }, [floor, complexStruct])
 
@@ -156,12 +135,26 @@ const AddStructure = () => {
         const color = simpleBodyColorRef.current.value
         const inputCoords = simpleBodyFaceRef.current.value
 
-        // const formatInputFace = /^(\s*\[\s*\d+\.\d+,\s*\d+\.\d+,\s*\d+\.\d+\]\s*,?\s*)+$/;
-
         if (!name || !height || !color || !inputCoords)
             return alert("Vui lòng điền đủ các trường trong form bên phải!")
         else {
-            axios.post('http://localhost:9098/api/faces')
+            const regex = /\[(.*?), (.*?)(?:, (.*?))?\]/g;
+            let match;
+            const listCoords = [];
+            while ((match = regex.exec(inputCoords)) !== null) {
+                const coords = {
+                    x: parseFloat(match[1]), 
+                    y: parseFloat(match[2]),
+                    z: match[3] ? parseFloat(match[3]) : 0.0
+                }
+                listCoords.push(coords);
+            }
+
+            const bodyFace = {
+                nodes: listCoords
+            }
+
+            axios.post('http://localhost:9098/api/faces/create', bodyFace)
                 .then((face) => {
                     const body = {
                         name: name,
@@ -172,32 +165,6 @@ const AddStructure = () => {
 
                     axios.post(`http://localhost:9098/api/simp-bodies/face/${face.data.id}`, body)
                         .then((res) => {
-                            const regex = /\[(.*?), (.*?)(?:, (.*?))?\]/g;
-                            let match;
-                            const listCoords = [];
-
-                            while ((match = regex.exec(inputCoords)) !== null) {
-                                const coords = [parseFloat(match[1]), parseFloat(match[2])];
-                                if (match[3]) {
-                                    coords.push(parseFloat(match[3]));
-                                }
-                                listCoords.push(coords);
-                            }
-                            
-                            for (let i = 0; i < listCoords.length; i++) {
-                                const node = {
-                                    x: listCoords[i][0],
-                                    y: listCoords[i][1],
-                                    z: listCoords[i][2] !== undefined ? listCoords[i][2] : 0.001
-                                }
-
-                                axios.post('http://localhost:9098/api/nodes', node)
-                                    .then((node) => {
-                                        axios.put(`http://localhost:9098/api/faces/${face.data.id}/nodes/${node.data.id}`)
-                                            .catch((err) => {console.log('FaceNode: ' + err)})
-                                    })
-                                    .catch((err) => {console.log('Node: ' + err)})
-                            }
                             alert("Thêm thành công!")
                             simpleBodyNameRef.current.value = ''
                             simpleBodyHeightRef.current.value = ''
@@ -225,10 +192,10 @@ const AddStructure = () => {
         if ((bodyType === 'complex' && selectedComplexStruct.id > 0) || createCompBodyStatus) {
             axios.get(`http://localhost:9098/api/comp-bodies/comp-structure/${selectedComplexStruct.id}`)
                 .then((res) => {
-                    if (res.data) {
+                    if (res.data.length > 0) {
                         setStructBodyList(res.data)
                         setCreateCompBodyStatus(false)
-                    } 
+                    } else setStructBodyList([])
                 })
                 .catch((err) => console.log(err))
         }
@@ -288,90 +255,56 @@ const AddStructure = () => {
         const height = complexPropHeightRef.current.value
         const color = complexPropColorRef.current.value
 
-        // const formatInputFace = /^(\s*\[\s*\d+\.\d+,\s*\d+\.\d+,\s*\d+\.\d+\]\s*,?\s*)+$/;
-
         if (body.id === undefined || !propName || !height || !color || faceList[0].face === '') {
             return alert("Vui lòng chọn thành phần và điền đầy đủ thông tin!")
         } else {
-            // for (let i = 0; i < faceList.length; i++) {
-            //     if (!formatInputFace.test(faceList[i].face))
-            //         return alert("Tọa độ mặt phẳng " + i+1 + " chưa đúng định dạng!")
-            //     if (faceList[i].face === "")
-            //         return alert("Vui lòng không bỏ trống trường tọa độ mặt phẳng!")
-            // }
+            const bodyProp = {
+                name: propName,
+                height: height,
+                color: color,
+                complexBody: body
+            }
 
+            axios.post(`http://localhost:9098/api/comp-body-props`, bodyProp)
+                .then((propResponse) => {
+                    for (let inputFace = 0; inputFace < faceList.length; inputFace++) {
+                        const regex = /\[(.*?), (.*?)(?:, (.*?))?\]/g;
+                        let match;
+                        const listCoords = [];
+                        while ((match = regex.exec(faceList[inputFace].face)) !== null) {
+                            const coords = {
+                                x: parseFloat(match[1]), 
+                                y: parseFloat(match[2]),
+                                z: match[3] ? parseFloat(match[3]) : 0.0
+                            }
+                            listCoords.push(coords);
+                        }
 
-        const bodyProp = {
-            name: propName,
-            height: height,
-            color: color,
-            complexBody: body
-        }
+                        const bodyFace = {
+                            nodes: listCoords
+                        }
+                        axios.post('http://localhost:9098/api/faces/create', bodyFace)
+                            .then((face) => {
+                                axios.put(`http://localhost:9098/api/comp-body-props/${propResponse.data.id}/face/${face.data.id}`)
+                                    .catch((err) => {
+                                        console.log(err)
+                                        alert("Thêm mặt phẳng cho chi tiết thất bại!")
+                                    })
+                            })
+                            .catch((err) => {
+                                console.log(err)
+                                alert("Thêm mặt phẳng thất bại!")
+                            })
+                    }
 
-        axios.post(`http://localhost:9098/api/comp-body-props`, bodyProp)
-            .then((propResponse) => {
-                for (let inputFace = 0; inputFace < faceList.length; inputFace++) {
-                    axios.post('http://localhost:9098/api/faces')
-                        .then((face) => {
-                            axios.put(`http://localhost:9098/api/comp-body-props/${propResponse.data.id}/face/${face.data.id}`)
-                                .then((propFaceResponse) => {
-                                    const regex = /\[(.*?), (.*?)(?:, (.*?))?\]/g;
-                                    let match;
-                                    const listCoords = [];
-
-                                    while ((match = regex.exec(faceList[inputFace].face)) !== null) {
-                                        const coords = [parseFloat(match[1]), parseFloat(match[2])];
-                                        if (match[3]) {
-                                            coords.push(parseFloat(match[3]));
-                                        }
-                                        listCoords.push(coords);
-                                    }
-                                    
-                                    for(let i = 0; i < listCoords.length; ) {
-                                        const node = {
-                                            x: listCoords[i][0],
-                                            y: listCoords[i][1],
-                                            z: listCoords[i][2] !== undefined ? listCoords[i][2] : 0.001
-                                        }
-
-                                        axios.post('http://localhost:9098/api/nodes', node)
-                                            .then((node) => {
-                                                axios.put(`http://localhost:9098/api/faces/${face.data.id}/nodes/${node.data.id}`)
-                                                    .then((facenode) => {
-                                                        i++
-                                                    })
-                                                    .catch((err) => {
-                                                        console.log('FaceNode: ' + err)
-                                                        alert("Thêm node cho mặt phẳng thất bại!")
-                                                    })
-                                            })
-                                            .catch((err) => {
-                                                console.log('Node: ' + err)
-                                                alert("Thêm tọa độ cho node thất bại!")
-                                            })
-                                    }
-                                })
-                                .catch((err) => {
-                                    console.log(err)
-                                    alert("Thêm mặt phẳng cho chi tiết thất bại!")
-                                })
-                        })
-                        .catch((err) => {
-                            console.log(err)
-                            alert("Thêm mặt phẳng thất bại!")
-                        })
-                }
-
-                alert("Thêm thành công!")
-                complexPropNameRef.current.value = ''
-                complexPropHeightRef.current.value = ''
-                complexPropColorRef.current.value = ''
-                setFaceList([{face: ""}])
-            })
-            .catch((err) => {
-                console.log(err)
-                alert("Thêm thuộc tính thất bại!")
-            })
+                    alert("Thêm thành công!")
+                    complexPropHeightRef.current.value = ''
+                    setFaceList([{face: ""}])
+                })
+                .catch((err) => {
+                    console.log(err)
+                    alert("Thêm thuộc tính thất bại!")
+                })
         }
     }
     return (
@@ -499,8 +432,6 @@ const AddStructure = () => {
                             </div>
                         )}
                     </div>
-                    
-                    
                 )}
             </div>
         </div>

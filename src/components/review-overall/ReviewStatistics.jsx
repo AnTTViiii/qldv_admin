@@ -18,7 +18,7 @@ const ReviewStatistics = () => {
     <div className='review-statistics-wrapper box'>
       <div className="title mbc">Tổng quan đánh giá</div>
       <table className="review-statistics">
-        {data.map((item) => (
+        {data && data.map((item) => (
           <tr className="review-statistics-item">
             <td>{item.tagRate.tag.name}</td>
             <td>

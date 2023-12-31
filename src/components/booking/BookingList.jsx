@@ -53,7 +53,7 @@ const BookingList = () => {
                     <th>Chi tiết</th>
                     <th>Trạng thái</th>
                 </tr>
-                {booking.map((item) => (
+                {booking && booking.map((item) => (
                     <tr>
                         <td>{item.id}</td>
                         <td><p onClick={() => {openUserInfoPopup(); setUserInfo(item.user)}}>ID {item.user.id}</p></td>

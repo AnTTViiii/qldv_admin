@@ -28,8 +28,8 @@ const ReviewList = () => {
   const [page, setPage] = useState(1);
   const PER_PAGE = 10;
 
-  const count = Math.ceil(data.length / PER_PAGE);
-  const _reviews = usePagination(data, PER_PAGE);
+  const count = data.length > 0 ? Math.ceil(data.length / PER_PAGE) : 1;
+  const _reviews = usePagination(data.length > 0 ? data : [], PER_PAGE);
 
   const handleChangePage = (e, p) => {
     setPage(p);
